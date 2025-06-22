@@ -2,39 +2,67 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const { generateToken } = require("../utils/generateToken");
+const asyncHandler = require("express-async-handler");
+const ErrorHandler = require("../middleware/error");
+
 const router = express.Router();
 
-// Register
-router.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
-  console.log("Registering user:", { name, email });
-  const userExists = await User.findOne({ email });
-  if (userExists) return res.status(400).json({ msg: "User exists" });
-  const hash = await bcrypt.hash(password, 10);
-  const user = await User.create({ name, email, password: hash });
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-    expiresIn: "7d",
-  });
-  res.json({ token, user: { id: user._id, name, email } });
-});
+// ✅ Register User
+router.post(
+  "/register",
+  asyncHandler(async (req, res, next) => {
+    const { name, email, password } = req.body;
 
-// Login
-router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (!user) return res.status(400).json({ msg: "User not found" });
-  const valid = await bcrypt.compare(password, user.password);
-  if (!valid) return res.status(400).json({ msg: "Invalid credentials" });
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-    expiresIn: "7d",
-  });
-  res.json({ token, user: { id: user._id, name: user.name, email } });
-});
+    if (!name || !email || !password) {
+      return next(new ErrorHandler("All fields are required", 400));
+    }
 
-// Get all users (for tagging/autocomplete)
-router.get("/all", async (req, res) => {
-  const users = await User.find({}, "_id name email");
-  res.json(users);
-});
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return next(new ErrorHandler("User already exists", 400));
+    }
+
+    const user = await User.create({ name, email, password });
+
+    generateToken(user, 201, "User registered successfully", res);
+  })
+);
+
+// ✅ Login User
+router.post(
+  "/login",
+  asyncHandler(async (req, res, next) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return next(new ErrorHandler("Email and password are required", 400));
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return next(new ErrorHandler("User not found", 400));
+    }
+
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) {
+      return next(new ErrorHandler("Invalid credentials", 400));
+    }
+
+    generateToken(user, 200, "User logged in successfully", res);
+  })
+);
+
+// ✅ Get all users (for tagging/autocomplete)
+router.get(
+  "/all",
+  asyncHandler(async (req, res, next) => {
+    const users = await User.find({}, "_id name email");
+    if (!users || users.length === 0) {
+      return next(new ErrorHandler("No users found", 404));
+    }
+    res.json(users);
+  })
+);
 
 module.exports = router;

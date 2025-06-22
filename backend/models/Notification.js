@@ -3,9 +3,9 @@ const mongoose = require("mongoose");
 const notificationSchema = new mongoose.Schema({
   recipientId: [
     {
-      type: String,
-      // ref: "User",
-      // required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
   ],
   senderId: {

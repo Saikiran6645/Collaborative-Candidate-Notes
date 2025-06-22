@@ -10,7 +10,6 @@ export default function NotesPanel({
   setMessage,
   suggestions,
   selectSuggestion,
-  allUsers,
   highlightId,
 }) {
   const messagesRef = useRef(null);
