@@ -4,7 +4,7 @@ const router = express.Router();
 const asyncHandler = require("express-async-handler");
 const ErrorHandler = require("../middleware/error");
 
-// ✅ List all candidates
+//  List all candidates
 router.get(
   "/",
   asyncHandler(async (req, res, next) => {
@@ -13,7 +13,7 @@ router.get(
   })
 );
 
-// ✅ Add a new candidate
+//  Add a new candidate
 router.post(
   "/",
   asyncHandler(async (req, res, next) => {
@@ -28,7 +28,7 @@ router.post(
   })
 );
 
-// ✅ Get candidate by ID
+//  Get candidate by ID
 router.get(
   "/:id",
   asyncHandler(async (req, res, next) => {

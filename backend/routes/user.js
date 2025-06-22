@@ -8,7 +8,7 @@ const ErrorHandler = require("../middleware/error");
 
 const router = express.Router();
 
-// ✅ Register User
+//  Register User
 router.post(
   "/register",
   asyncHandler(async (req, res, next) => {
@@ -29,7 +29,7 @@ router.post(
   })
 );
 
-// ✅ Login User
+//  Login User
 router.post(
   "/login",
   asyncHandler(async (req, res, next) => {
@@ -53,7 +53,7 @@ router.post(
   })
 );
 
-// ✅ Get all users (for tagging/autocomplete)
+//  Get all users (for tagging/autocomplete)
 router.get(
   "/all",
   asyncHandler(async (req, res, next) => {

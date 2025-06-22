@@ -4,7 +4,7 @@ const router = express.Router();
 const asyncHandler = require("express-async-handler");
 const ErrorHandler = require("../middleware/error");
 
-// ✅ Get all notes for a candidate
+//  Get all notes for a candidate
 router.get(
   "/:candidateId",
   asyncHandler(async (req, res, next) => {
@@ -22,7 +22,7 @@ router.get(
   })
 );
 
-// ✅ Get notifications for a user (tagged in notes)
+//  Get notifications for a user (tagged in notes)
 router.get(
   "/notifications/:userId",
   asyncHandler(async (req, res, next) => {

@@ -5,7 +5,7 @@ const authMiddleware = require("../middleware/auth");
 const asyncHandler = require("express-async-handler");
 const ErrorHandler = require("../middleware/error");
 
-// ✅ Get all notifications for the logged-in user
+//  Get all notifications for the logged-in user
 router.get(
   "/",
   authMiddleware,
@@ -22,7 +22,7 @@ router.get(
   })
 );
 
-// ✅ Delete a notification by ID
+//  Delete a notification by ID
 router.delete(
   "/:id",
   authMiddleware,
