@@ -1,8 +1,8 @@
-
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
+import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
@@ -12,10 +12,14 @@ import ProtectedRoute from "./components/ProtectedRoute";
 function App() {
   return (
     <BrowserRouter>
-      <>
+      <Navbar />
+
+      {/* Push content down so it's not overlapped by the fixed Navbar */}
+      <div className="pt-16">
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+
           <Route
             path="/"
             element={
@@ -24,6 +28,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/candidate/:id"
             element={
@@ -33,8 +38,9 @@ function App() {
             }
           />
         </Routes>
-        <ToastContainer position="top-right" autoClose={3000} />
-      </>
+      </div>
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </BrowserRouter>
   );
 }

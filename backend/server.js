@@ -11,6 +11,8 @@ const Note = require("./models/Note");
 const Notification = require("./models/Notification");
 const notificationroutes = require("./routes/notification");
 const User = require("./models/User");
+// const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 require("dotenv").config();
 
@@ -26,7 +28,14 @@ const MONGO_URI =
 
 mongoose.connect(MONGO_URI).then(() => console.log("MongoDB connected"));
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // frontend URL
+    credentials: true,
+  })
+);
+
+app.use(cookieParser());
 app.use(express.json());
 
 // API Routes
@@ -67,7 +76,6 @@ io.on("connection", (socket) => {
       });
       // console.log("Notification created:", notification);
       if (onlineUsers[taggedUserId]) {
-        console.log("Emitting notification to:", taggedUserId);
         io.to(onlineUsers[taggedUserId]).emit("notification", notification);
       }
     }
