@@ -14,6 +14,7 @@ const notificationSchema = new mongoose.Schema({
     required: true,
   },
   candidateId: { type: String },
+  userName: { type: String },
   message: { type: String, required: true },
   read: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },

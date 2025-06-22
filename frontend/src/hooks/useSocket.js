@@ -16,8 +16,23 @@ export default function useSocket(candidateId) {
     else socketRef.current.emit("joinRoom", { userId: user.id });
 
     socketRef.current.on("notification", (data) => {
+      console.log("Notification received:", data);
       dispatch(addNotification(data));
-      toast.info(`🔔 You were mentioned by ${data.userName}`);
+
+      toast.info(
+        `🔔 ${data.userName}: ${
+          data.message || "You have a new notification!"
+        }`,
+        {
+          position: "top-right",
+          autoClose: 5000, // 5 seconds
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "light",
+        }
+      );
     });
 
     return () => {

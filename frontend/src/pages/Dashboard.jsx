@@ -5,13 +5,29 @@ import NotificationCard from "../components/NotificationCard";
 import { useSelector, useDispatch } from "react-redux";
 import useSocket from "../hooks/useSocket";
 import { setNotifications } from "../features/notificationsSlice";
+import { FaUserAlt, FaBell } from "react-icons/fa";
 
 export default function Dashboard() {
+  useQuery({
+    queryKey: ["notifications"],
+    queryFn: async () => {
+      const res = await api.get("/notifications");
+      return res.data;
+    },
+    onSuccess: (data) => {
+      dispatch(setNotifications(data));
+    },
+  });
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  // Socket connection for real-time updates
   useSocket();
+  useQuery({
+    queryKey: ["notifications"],
+    queryFn: () => api.get("/notifications").then((res) => res.data),
+    onSuccess: (data) => dispatch(setNotifications(data)),
+    enabled: !!user,
+  });
 
   // Fetch candidates
   const { data: candidates = [], refetch: refetchCandidates } = useQuery({
@@ -22,48 +38,45 @@ export default function Dashboard() {
     },
   });
 
-  // Fetch notifications from backend on load and persist to Redux
-  useQuery({
-    queryKey: ["notifications"],
-    queryFn: async () => {
-      const res = await api.get("/notifications");
-      return res.data;
-    },
-    onSuccess: (data) => {
-      dispatch(setNotifications(data));
-    },
-    enabled: !!user, // Only fetch if user is available
-  });
+  // Fetch notifications
 
   return (
-    <div className="container mx-auto py-8 min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
-      <div className="rounded-xl shadow-lg bg-white px-8 py-6 mb-10 flex flex-col items-center">
-        <h2 className="text-3xl font-extrabold mb-2 text-slate-900 tracking-tight">
-          Welcome, <span className="text-blue-600">{user.name}</span>
+    <div className="container mx-auto py-10 min-h-screen bg-gradient-to-tr from-[#fdfbfb] via-[#ebedee] to-[#dfe9f3]">
+      {/* Welcome Banner */}
+      <div className="rounded-2xl shadow-xl bg-gradient-to-r from-indigo-100 to-purple-100 px-10 py-8 mb-12 border border-indigo-200 text-center">
+        <h2 className="text-5xl font-extrabold text-indigo-800 mb-3 tracking-tight">
+          Welcome, <span className="text-purple-600">{user.name}</span>
         </h2>
-        <p className="text-lg text-slate-600 text-center">
-          Here’s an overview of your dashboard. Track candidates and receive
-          real-time notifications.
+        <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+          Manage candidates, track collaboration notes, and receive real-time
+          notifications – all in one place.
         </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="rounded-lg shadow-md bg-white p-6 hover:shadow-xl transition-shadow">
-          <div className="flex items-center mb-4">
-            <span className="text-xl font-semibold text-slate-800">
+
+      {/* Grid Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        {/* Candidates Section */}
+        <div className="rounded-2xl shadow-lg bg-white p-6 border border-indigo-100 hover:shadow-2xl transition duration-300 transform hover:-translate-y-1">
+          <div className="flex items-center mb-5">
+            <FaUserAlt className="text-indigo-600 text-2xl" />
+            <h3 className="text-xl font-semibold text-slate-800 ml-3">
               Candidates
-            </span>
-            <span className="ml-2 inline-block h-2 w-2 bg-blue-500 rounded-full animate-pulse" />
+            </h3>
+            <span className="ml-2 h-2 w-2 bg-green-500 rounded-full animate-ping" />
           </div>
-          <hr className="border-slate-200 mb-6" />
+          <hr className="border-indigo-200 mb-5" />
           <CandidateList candidates={candidates} refetch={refetchCandidates} />
         </div>
-        <div className="rounded-lg shadow-md bg-white p-6 hover:shadow-xl transition-shadow">
-          <div className="flex items-center mb-4">
-            <span className="text-xl font-semibold text-slate-800">
+
+        {/* Notifications Section */}
+        <div className="rounded-2xl shadow-lg bg-white p-6 border border-pink-100 hover:shadow-2xl transition duration-300 transform hover:-translate-y-1">
+          <div className="flex items-center mb-5">
+            <FaBell className="text-pink-500 text-2xl" />
+            <h3 className="text-xl font-semibold text-slate-800 ml-3">
               Notifications
-            </span>
+            </h3>
           </div>
-          <hr className="border-slate-200 mb-6" />
+          <hr className="border-pink-200 mb-5" />
           <NotificationCard />
         </div>
       </div>
