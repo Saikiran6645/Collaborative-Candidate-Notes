@@ -26,10 +26,13 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Login</CardTitle>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 px-4">
+      <Card className="w-full max-w-md p-6 shadow-xl rounded-2xl border border-indigo-200 bg-white hover:shadow-2xl transition duration-300">
+        <CardHeader className="text-center mb-4">
+          <CardTitle className="text-3xl font-extrabold text-indigo-700 tracking-tight">
+            Welcome Back
+          </CardTitle>
+          <p className="text-sm text-slate-500 mt-1">Log in to continue</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={onSubmit} className="flex flex-col gap-4">
@@ -39,6 +42,7 @@ export default function Login() {
               placeholder="Email"
               required
               type="email"
+              className="focus:ring-2 focus:ring-indigo-400"
             />
             <Input
               type="password"
@@ -46,15 +50,28 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
               required
+              className="focus:ring-2 focus:ring-indigo-400"
             />
-            <Button type="submit">Login</Button>
-            <div className="text-sm">
-              Don't have account?{" "}
-              <Link className="underline" to="/register">
+            <Button
+              type="submit"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white"
+            >
+              Login
+            </Button>
+            {err && (
+              <div className="text-red-500 bg-red-50 border border-red-200 rounded p-2 text-sm">
+                {err}
+              </div>
+            )}
+            <div className="text-sm text-center mt-2 text-slate-600">
+              Don't have an account?{" "}
+              <Link
+                className="text-indigo-600 hover:underline font-medium"
+                to="/register"
+              >
                 Register
               </Link>
             </div>
-            {err && <div className="text-red-500">{err}</div>}
           </form>
         </CardContent>
       </Card>

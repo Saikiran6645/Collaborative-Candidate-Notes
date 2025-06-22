@@ -10,6 +10,8 @@ const authMiddleware = require("./middleware/auth");
 const Note = require("./models/Note");
 const Notification = require("./models/Notification");
 const notificationroutes = require("./routes/notification");
+const User = require("./models/User");
+
 require("dotenv").config();
 
 const app = express();
@@ -31,7 +33,7 @@ app.use(express.json());
 app.use("/api/user", userRoutes);
 app.use("/api/candidate", authMiddleware, candidateRoutes);
 app.use("/api/notes", authMiddleware, notesRoutes);
-app.use("/api/notifications", notificationroutes);
+app.use("/api/notifications", authMiddleware, notificationroutes);
 
 // --- Socket.io Real-Time ---
 const onlineUsers = {};
@@ -49,7 +51,9 @@ io.on("connection", (socket) => {
 
     // Send new note to candidate room
     io.to(data.candidateId).emit("receiveNote", savedNote);
-
+    const userName = await User.findById({
+      _id: data.userId,
+    });
     // For each tagged user, create and emit notification
     for (const taggedUserId of data.taggedUsers) {
       const notification = await Notification.create({
@@ -58,11 +62,12 @@ io.on("connection", (socket) => {
         candidateId: data.candidateId,
         noteId: savedNote._id,
         message: data.message,
-
+        userName: userName.name,
         createdAt: new Date(),
       });
-
+      // console.log("Notification created:", notification);
       if (onlineUsers[taggedUserId]) {
+        console.log("Emitting notification to:", taggedUserId);
         io.to(onlineUsers[taggedUserId]).emit("notification", notification);
       }
     }
