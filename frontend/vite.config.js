@@ -4,7 +4,8 @@ import path from "path";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()], // ✅ Only include the react plugin
+  base: "./", // ✅ This tells Vite to use relative paths for all assets
+  plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
