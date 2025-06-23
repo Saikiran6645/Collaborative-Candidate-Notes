@@ -5,7 +5,7 @@ import { logout } from "../features/authSlice";
 import { FaSignOutAlt, FaUserCircle } from "react-icons/fa";
 // import axios from "axios";
 import api from "@/api/api";
-api;
+import { persistor } from "@/app/store";
 export default function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -15,6 +15,8 @@ export default function Navbar() {
     try {
       await api.get("/user/logout");
       dispatch(logout());
+      persistor.purge(); // Clear persisted state
+
       navigate("/login", { replace: true });
     } catch (err) {
       console.error("Logout failed:", err);
