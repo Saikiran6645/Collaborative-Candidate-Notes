@@ -56,7 +56,11 @@ router.get(
   "/logout",
   auth,
   asyncHandler(async (req, res) => {
-    res.clearCookie("token");
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: true, // ✅ must match the original setting
+      sameSite: "None", // ✅ must match original setting
+    });
     res.json({ message: "User logged out successfully" });
   })
 );
