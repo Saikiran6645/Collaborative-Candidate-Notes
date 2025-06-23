@@ -10,7 +10,12 @@ export default function useSocket(candidateId) {
 
   useEffect(() => {
     if (!user) return;
-    socketRef.current = io("http://localhost:5000");
+    socketRef.current = io(
+      "https://collaborative-candidate-notes.onrender.com",
+      {
+        withCredentials: true,
+      }
+    );
     if (candidateId)
       socketRef.current.emit("joinRoom", { candidateId, userId: user.id });
     else socketRef.current.emit("joinRoom", { userId: user.id });
