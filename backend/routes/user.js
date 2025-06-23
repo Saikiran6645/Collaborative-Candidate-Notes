@@ -68,6 +68,7 @@ router.get(
 //  Get all users (for tagging/autocomplete)
 router.get(
   "/all",
+  auth,
   asyncHandler(async (req, res, next) => {
     const users = await User.find({}, "_id name email");
     if (!users || users.length === 0) {
@@ -76,5 +77,13 @@ router.get(
     res.json(users);
   })
 );
-
+router.get("/me", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
 module.exports = router;
