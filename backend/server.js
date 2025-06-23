@@ -30,7 +30,7 @@ mongoose.connect(MONGO_URI).then(() => console.log("MongoDB connected"));
 
 app.use(
   cors({
-    origin: "https://collaborative-candidate-notes-1.onrender.com", // frontend URL
+    origin: ["https://collaborative-candidate-notes-1.onrender.com"], // frontend URL
     credentials: true,
   })
 );
