@@ -4,7 +4,7 @@ import path from "path";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  base: "./", // ✅ This tells Vite to use relative paths for all assets
+  base: "/", // ✅ This tells Vite to use relative paths for all assets
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
