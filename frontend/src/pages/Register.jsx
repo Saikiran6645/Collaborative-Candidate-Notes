@@ -22,7 +22,7 @@ export default function Register() {
       dispatch(setAuth({ token: res.data.token, user: res.data.user }));
       navigate("/");
     } catch (error) {
-      setErr(error.response?.data?.msg || "Registration error");
+      setErr(error.response?.data?.message || "Registration error");
     }
   };
 

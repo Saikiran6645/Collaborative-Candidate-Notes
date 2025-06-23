@@ -11,8 +11,8 @@ const Note = require("./models/Note");
 const Notification = require("./models/Notification");
 const notificationroutes = require("./routes/notification");
 const User = require("./models/User");
-// const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const { errorMiddleware } = require("./middleware/error");
 
 require("dotenv").config();
 
@@ -43,7 +43,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/candidate", authMiddleware, candidateRoutes);
 app.use("/api/notes", authMiddleware, notesRoutes);
 app.use("/api/notifications", authMiddleware, notificationroutes);
-
+app.use(errorMiddleware);
 // --- Socket.io Real-Time ---
 const onlineUsers = {};
 

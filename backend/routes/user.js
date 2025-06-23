@@ -4,7 +4,8 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { generateToken } = require("../utils/generateToken");
 const asyncHandler = require("express-async-handler");
-const ErrorHandler = require("../middleware/error");
+const { ErrorHandler } = require("../middleware/error");
+const auth = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -34,7 +35,6 @@ router.post(
   "/login",
   asyncHandler(async (req, res, next) => {
     const { email, password } = req.body;
-
     if (!email || !password) {
       return next(new ErrorHandler("Email and password are required", 400));
     }
@@ -50,6 +50,14 @@ router.post(
     }
 
     generateToken(user, 200, "User logged in successfully", res);
+  })
+);
+router.get(
+  "/logout",
+  auth,
+  asyncHandler(async (req, res) => {
+    res.clearCookie("token");
+    res.json({ message: "User logged out successfully" });
   })
 );
 

@@ -3,17 +3,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { logout } from "../features/authSlice";
 import { FaSignOutAlt, FaUserCircle } from "react-icons/fa";
-
+// import axios from "axios";
+import api from "@/api/api";
+api;
 export default function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login", { replace: true });
+  const handleLogout = async () => {
+    try {
+      await api.get("/user/logout");
+      dispatch(logout());
+      navigate("/login", { replace: true });
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
   };
-
   return (
     <nav className="fixed top-0 left-0 w-full h-12 bg-indigo-600 text-white flex items-center px-6 shadow-md z-50">
       <div className="flex items-center space-x-4">

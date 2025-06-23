@@ -1,6 +1,6 @@
 export const generateToken = (user, statusCode, message, res) => {
   const token = user.getJwtToken();
-  console.log("Generated Token:", token);
+  // console.log("Generated Token:", token);
 
   res
     .status(statusCode)

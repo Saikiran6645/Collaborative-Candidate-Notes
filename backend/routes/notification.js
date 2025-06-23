@@ -3,7 +3,7 @@ const router = express.Router();
 const Notification = require("../models/Notification");
 const authMiddleware = require("../middleware/auth");
 const asyncHandler = require("express-async-handler");
-const ErrorHandler = require("../middleware/error");
+const { ErrorHandler } = require("../middleware/error");
 
 //  Get all notifications for the logged-in user
 router.get(

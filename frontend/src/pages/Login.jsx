@@ -21,7 +21,7 @@ export default function Login() {
       dispatch(setAuth({ token: res.data.token, user: res.data.user }));
       navigate("/");
     } catch (error) {
-      setErr(error.response?.data?.msg || "Login error");
+      setErr(error.response?.data?.message || "Login error");
     }
   };
 

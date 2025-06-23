@@ -2,7 +2,7 @@ const express = require("express");
 const Note = require("../models/Note");
 const router = express.Router();
 const asyncHandler = require("express-async-handler");
-const ErrorHandler = require("../middleware/error");
+const { ErrorHandler } = require("../middleware/error");
 
 //  Get all notes for a candidate
 router.get(

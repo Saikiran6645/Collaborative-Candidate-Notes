@@ -2,7 +2,7 @@ const express = require("express");
 const Candidate = require("../models/Candidate");
 const router = express.Router();
 const asyncHandler = require("express-async-handler");
-const ErrorHandler = require("../middleware/error");
+const { ErrorHandler } = require("../middleware/error");
 
 //  List all candidates
 router.get(
