@@ -1,7 +1,12 @@
 const mongoose = require("mongoose");
 
 const noteSchema = new mongoose.Schema({
-  candidateId: String,
+  candidateId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Candidate",
+    required: true,
+  },
+
   userId: String,
   userName: String,
   message: String,
