@@ -1,22 +1,10 @@
 import api from "@/api/api";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-
+import { RingLoader } from "react-spinners";
 export default function ProtectedRoute({ children }) {
-  const [isAuth, setIsAuth] = useState(null); // null = loading
+  const { token } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        await api.get("/user/me"); // or /verify route
-        setIsAuth(true);
-      } catch (err) {
-        setIsAuth(false);
-      }
-    };
-    checkAuth();
-  }, []);
-
-  if (isAuth === null) return <div>Loading...</div>;
-  return isAuth ? children : <Navigate to="/login" />;
+  return token ? children : <Navigate to="/login" />;
 }
