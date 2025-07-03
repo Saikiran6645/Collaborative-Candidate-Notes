@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import useSocket from "../hooks/useSocket";
 import { setNotifications } from "../features/notificationsSlice";
 import { FaUserAlt, FaBell } from "react-icons/fa";
+import { RingLoader } from "react-spinners";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
@@ -15,15 +16,20 @@ export default function Dashboard() {
   const socket = useSocket(); // single socket for real-time
 
   // Load stored notifications
-  const { data: notifications = [] } = useQuery({
-    queryKey: ["notifications"],
-    queryFn: () => api.get("/notifications").then((res) => res.data),
-    enabled: !!user,
-    onSuccess: (data) => dispatch(setNotifications(data)),
-  });
+  const { data: notifications = [], isLoading: notificationsLoading } =
+    useQuery({
+      queryKey: ["notifications"],
+      queryFn: () => api.get("/notifications").then((res) => res.data),
+      enabled: !!user,
+      onSuccess: (data) => dispatch(setNotifications(data)),
+    });
 
   // Fetch candidates
-  const { data: candidates = [], refetch: refetchCandidates } = useQuery({
+  const {
+    data: candidates = [],
+    refetch: refetchCandidates,
+    isLoading: candidatesLoading,
+  } = useQuery({
     queryKey: ["candidates"],
     queryFn: () => api.get("/candidate").then((res) => res.data),
     enabled: !!user,
@@ -54,7 +60,16 @@ export default function Dashboard() {
             <span className="ml-2 h-2 w-2 bg-green-500 rounded-full animate-ping" />
           </div>
           <hr className="border-indigo-200 mb-5" />
-          <CandidateList candidates={candidates} refetch={refetchCandidates} />
+          {candidatesLoading ? (
+            <div className="flex justify-center py-8">
+              <RingLoader size={42} color="#6366f1" />
+            </div>
+          ) : (
+            <CandidateList
+              candidates={candidates}
+              refetch={refetchCandidates}
+            />
+          )}
         </div>
 
         {/* Notifications Panel */}
@@ -71,7 +86,13 @@ export default function Dashboard() {
             className="overflow-y-auto flex-grow space-y-4 pr-2"
             style={{ maxHeight: "400px" }}
           >
-            <NotificationCard />
+            {notificationsLoading ? (
+              <div className="flex justify-center py-8">
+                <RingLoader size={42} color="#f472b6" />
+              </div>
+            ) : (
+              <NotificationCard />
+            )}
           </div>
         </div>
       </div>

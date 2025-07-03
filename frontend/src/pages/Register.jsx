@@ -6,23 +6,29 @@ import { setAuth } from "../features/authSlice";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { RingLoader } from "react-spinners";
 
 export default function Register() {
   const [name, setName] = useState(""),
     [email, setEmail] = useState(""),
     [password, setPassword] = useState("");
   const [err, setErr] = useState("");
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    setErr("");
+    setLoading(true);
     try {
       const res = await api.post("/user/register", { name, email, password });
       dispatch(setAuth({ token: res.data.token, user: res.data.user }));
       navigate("/");
     } catch (error) {
       setErr(error.response?.data?.message || "Registration error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -45,6 +51,7 @@ export default function Register() {
               placeholder="Name"
               required
               className="focus:ring-2 focus:ring-indigo-400"
+              disabled={loading}
             />
             <Input
               value={email}
@@ -53,6 +60,7 @@ export default function Register() {
               required
               type="email"
               className="focus:ring-2 focus:ring-indigo-400"
+              disabled={loading}
             />
             <Input
               type="password"
@@ -61,12 +69,14 @@ export default function Register() {
               placeholder="Password"
               required
               className="focus:ring-2 focus:ring-indigo-400"
+              disabled={loading}
             />
             <Button
               type="submit"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center"
+              disabled={loading}
             >
-              Register
+              {loading ? <RingLoader size={24} color="#fff" /> : "Register"}
             </Button>
             {err && (
               <div className="text-red-500 bg-red-50 border border-red-200 rounded p-2 text-sm">
