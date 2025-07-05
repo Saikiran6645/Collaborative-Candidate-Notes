@@ -45,7 +45,7 @@ export default function Login() {
             <Input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="ramesh@gmail.com"
+              placeholder="ayan@gmail.com"
               required
               type="email"
               className="focus:ring-2 focus:ring-indigo-400"
