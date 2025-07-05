@@ -45,7 +45,7 @@ export default function Login() {
             <Input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
+              placeholder="ramesh@gmail.com"
               required
               type="email"
               className="focus:ring-2 focus:ring-indigo-400"
@@ -55,7 +55,7 @@ export default function Login() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
+              placeholder="Password@123"
               required
               className="focus:ring-2 focus:ring-indigo-400"
               disabled={loading}
